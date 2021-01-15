@@ -1,20 +1,4 @@
-var inquirer = require("inquirer");//import Inquirer
-const mysql = require("mysql"); //import MySQL
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  port:3306, // Your port; if not 3306
-  user: "root",  // Your username
-  password: "Oabc690218!",
-  database: "EmployeeTracker_DB"
-});
-
-connection.connect( (err) => {
-    if (err) throw err;
-    runSearch();
-});
-  
-
+const inquirer = require("inquirer");
 
 // Build a command-line application that at a minimum allows the user to:
 //   * Add departments, roles, employees
@@ -26,15 +10,15 @@ const runSearch = () => {
     type: "list",
     message: "What would you like to do?",
     choices: [
-      "View All Employees",
-      "View All Employes by Department",
-      "View All Employees by Manager",
-      "Add Employee",
-      "Remove Employee",
-      "Update Employee Role",
+      "View All Employees", //select all
+      "View All Employes by Department",//select all where.depends on department id
+      "View All Employees by Manager",//select all where. depends on manager id. 
+      "Add Employee",//insert into
+      "Remove Employee", //delete from where
+      "Update Employee Role",// update, set, where
       "Update Employee Manager",
-      "View All Roles",
-      "Add Role",
+      "View All Roles",//select roles only
+      "Add Role",//insert into
       "Exit"
     ]
   }).then(function(answer) {
@@ -71,6 +55,7 @@ const runSearch = () => {
       break;
   }});
 }
+module.exports = runSearch();
 
 const viewEmployees = () => {
   //will display employee table on console

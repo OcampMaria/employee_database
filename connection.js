@@ -1,20 +1,21 @@
-// const mysql = require("mysql"); //import MySQL
-// const connection = mysql.createConnection({
-//   host: "localhost",
+const mysql = require("mysql"); //import MySQL
+const runSearch = require("./employeeTracker");
 
-//   // Your port; if not 3306
-//   port:3306,
+const connection = mysql.createConnection({
+  host: "localhost",
 
-//   // Your username
-//   user: "root",
+  // Your port; if not 3306
+  port:3306,
 
-//   // Your password
-//   password: "Oabc690218!",
-//   database: "EmployeeTracker_DB"
-// });
+  // Your username
+  user: "root",
 
-// connection.connect( (err) => {
-//     if (err) throw err;
-//     start();
-// });
-  
+  // Your password
+  password: "Oabc690218!",
+  database: "EmployeeTracker_DB"
+});
+
+connection.connect( (err) => {
+    if (err) throw err;
+    runSearch();
+});
