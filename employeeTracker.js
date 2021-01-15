@@ -12,11 +12,9 @@ const runSearch = () => {
     choices: [
       "View All Employees", //select all
       "View All Employes by Department",//select all where.depends on department id
-      "View All Employees by Manager",//select all where. depends on manager id. 
       "Add Employee",//insert into
       "Remove Employee", //delete from where
       "Update Employee Role",// update, set, where
-      "Update Employee Manager",
       "View All Roles",//select roles only
       "Add Role",//insert into
       "Exit"
@@ -26,11 +24,8 @@ const runSearch = () => {
     case "View All Employees":
       viewEmployees();
       break;
-    case "View All Employes by Department":
+    case "View All Employees by Department":
       byDepartment();
-      break;
-    case "View All Employees by Manager":
-      byManager();
       break;
     case "Add Employee":
       addEmployee();
@@ -41,9 +36,6 @@ const runSearch = () => {
     case "Update Employee Role":
       updateRole();
       break;  
-    case "Update Employee Manager":
-      updateManager();
-      break;   
     case "View All Roles":
       allRoles();
       break;        
@@ -95,7 +87,7 @@ const byManager = () => {
   })
 }
 
-const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Account Manager', 'Accountant', 'Leagal Team Lead']
+const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer']
 
 const addEmployee=() => {
   //adds new employees
@@ -126,12 +118,9 @@ const addEmployee=() => {
       console.log(answer);
       
       for (i = 0; i < role.length; i++) {
-        console.log(i);
-        console.log(answer.role_id);
-        console.log(role[i]);
-        if(answer.role_id=== role[i]){
-          answer.role_id = i;
-          console.log(answer.role_id);
+        if(answer.role_id === role[i]){
+          answer.role_id = i+1;
+          console.log(answer.role_id, "current");
         }
       }
       connection.query("INSERT INTO employee SET ?", 
@@ -175,7 +164,7 @@ function updateRole() {
       {
         name: "role",
         type: "list",
-        choices:['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Account Manager', 'Accountant', 'Leagal Team Lead'],
+        choices: role,
         message: "What is the employee's new role?"
     }
   ]).then(()=>{
