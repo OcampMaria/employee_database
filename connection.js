@@ -1,5 +1,5 @@
 const mysql = require("mysql"); //import MySQL
-const runSearch = require("./employeeTracker");
+const util = require ("util");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -17,5 +17,8 @@ const connection = mysql.createConnection({
 
 connection.connect( (err) => {
     if (err) throw err;
-    runSearch();
+    
 });
+
+connection.query = util.promisify(connection.query);
+module.exports = connection;

@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-
+const connection = require ("./connection")
 // Build a command-line application that at a minimum allows the user to:
 //   * Add departments, roles, employees
 //   * View departments, roles, employees
@@ -55,7 +55,8 @@ const runSearch = () => {
       break;
   }});
 }
-module.exports = runSearch();
+runSearch ();
+
 
 const viewEmployees = () => {
   //will display employee table on console
@@ -94,6 +95,8 @@ const byManager = () => {
   })
 }
 
+const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Account Manager', 'Accountant', 'Leagal Team Lead']
+
 const addEmployee=() => {
   //adds new employees
   inquirer.prompt([
@@ -110,7 +113,7 @@ const addEmployee=() => {
     {
       name: "role_id",
       type: "list",
-      choices:['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Account Manager', 'Accountant', 'Leagal Team Lead'],
+      choices:role,
       message: "What is the employee's role?"
     },
     {
@@ -121,11 +124,21 @@ const addEmployee=() => {
     }
     ]).then((answer)=>{
       console.log(answer);
+      
+      for (i = 0; i < role.length; i++) {
+        console.log(i);
+        console.log(answer.role_id);
+        console.log(role[i]);
+        if(answer.role_id=== role[i]){
+          answer.role_id = i;
+          console.log(answer.role_id);
+        }
+      }
       connection.query("INSERT INTO employee SET ?", 
       {
         first_name:answer.firstName, 
         last_name: answer.lastName, 
-        role: answer.role
+        role_id: answer.role_id
       }, 
       (err)=>{
         if (err) throw err;
@@ -213,3 +226,4 @@ const addRole= () => {
       runSearch();
     })
 }
+
