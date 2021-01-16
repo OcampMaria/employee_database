@@ -124,20 +124,22 @@ const addEmployee=() => {
         } 
       };
 
-      for (i=0; i< managers.length;i++){
-        if(answer.manager === managers[i]){
-          answer.manager = i+1;
-          console.log(answer.manager, "managerID");
-          
-        } 
-      }
-
       if(answer.role_id === 8){
         managers.push(`${answer.firstName} ${answer.lastName}`);
+        //every time I push to the array, the names do not append, they replace the last added name. and the managerID does not appear on the database
         console.log(managers);
-      };
+        for (i=0; i< managers.length;i++){
+          if(answer.manager === managers[i]){
+            answer.manager = i+1;
+            console.log(answer.manager, "managerID");
+  
+          }
+        }
+      };    
 
-    
+     
+
+     
       
       connection.query("INSERT INTO employee SET ?", 
       {
