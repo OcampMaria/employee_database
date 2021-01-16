@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const connection = require ("./connection");
 
 const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer', 'Manager']
-const managers = ['none'];
+const managers = ['sam', 'none'];
 const department = ['Sales','Engineering', 'Finance', 'Legal'];
 
 
@@ -105,6 +105,7 @@ const addEmployee=() => {
       choices:role,
       message: "What is the employee's role?"
     },
+    
     {
       name: "manager",
       type: "list",
@@ -113,23 +114,37 @@ const addEmployee=() => {
     }
     ]).then((answer)=>{
       console.log(answer);
-      
+
+      const managers= ['none'];
+
       for (i = 0; i < role.length; i++) {
         if(answer.role_id === role[i]){
           answer.role_id = i+1;
-          console.log(answer.role_id, "current");
-        }
+          console.log(answer.role_id, "roleID");
+        } 
+      };
+
+      for (i=0; i< managers.length;i++){
+        if(answer.manager === managers[i]){
+          answer.manager = i+1;
+          console.log(answer.manager, "managerID");
+          
+        } 
       }
 
-      if(answer.manager){
-        console.log(answer.firstName);
-        // managers.push(answer.firstName)
-      }
+      if(answer.role_id === 8){
+        managers.push(`${answer.firstName} ${answer.lastName}`);
+        console.log(managers);
+      };
+
+    
+      
       connection.query("INSERT INTO employee SET ?", 
       {
         first_name:answer.firstName, 
         last_name: answer.lastName, 
-        role_id: answer.role_id
+        role_id: answer.role_id,
+        manager_id: answer.manager_id,
       }, 
       (err, res)=>{
         if (err) throw err;
