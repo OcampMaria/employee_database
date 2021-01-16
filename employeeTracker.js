@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const connection = require ("./connection");
 
-const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer']
+const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer', 'Manager']
 const managers = ['none'];
 const department = ['Sales','Engineering', 'Finance', 'Legal'];
 
@@ -119,6 +119,11 @@ const addEmployee=() => {
           answer.role_id = i+1;
           console.log(answer.role_id, "current");
         }
+      }
+
+      if(answer.manager){
+        console.log(answer.firstName);
+        // managers.push(answer.firstName)
       }
       connection.query("INSERT INTO employee SET ?", 
       {
