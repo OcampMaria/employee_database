@@ -1,10 +1,16 @@
 const inquirer = require("inquirer");
-const connection = require ("./connection")
+const connection = require ("./connection");
+
+const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer']
+const managers = ['none'];
+const department = ['Sales','Engineering', 'Finance', 'Legal'];
+
+
 // Build a command-line application that at a minimum allows the user to:
 //   * Add departments, roles, employees
 //   * View departments, roles, employees
 //   * Update employee roles
-const runSearch = () => {
+const search = () => {
   inquirer.prompt({
     name: "action",
     type: "list",
@@ -47,16 +53,18 @@ const runSearch = () => {
       break;
   }});
 }
-runSearch ();
+search ();
 
 
 const viewEmployees = () => {
   //will display employee table on console
-  connection.query ("SELECT * FROM employee"), (err, result)=>{
+  const query = "SELECT * FROM employee";
+  connection.query (query), (err, res)=>{
+    console.log(res);
     if (err) throw err;
-    console.log(result);
-  }
-  runSearch();
+    console.table(res);
+    search();
+  };
 }
 
 const byDepartment = () => {
@@ -64,7 +72,7 @@ const byDepartment = () => {
   inquirer.prompt({
     name: "department",
     type: "list",
-    choices: ['Sales','Engineering', 'Finance', 'Legal'],
+    choices: department,
     message: "What department would you like to search for?"
   }).then((answer)=>{
     console.log(answer);
@@ -72,22 +80,11 @@ const byDepartment = () => {
       if (err) throw err;
       console.log(result);
     }
-    runSearch();
-  })
-}
-const byManager = () => {
-  //display employees by manager
-  inquirer.prompt({
-    name: "manager",
-    type: "list",
-    choices: [],
-    message: "What manager would you like to search for?"
-  }).then(()=>{
-    runSearch();
+    search();
   })
 }
 
-const role = ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Accountant','Legal Team Lead', 'Lawyer']
+
 
 const addEmployee=() => {
   //adds new employees
@@ -111,7 +108,7 @@ const addEmployee=() => {
     {
       name: "manager",
       type: "list",
-      choices: ['none'],
+      choices: managers,
       message: "who is the employee's manager?"
     }
     ]).then((answer)=>{
@@ -129,10 +126,11 @@ const addEmployee=() => {
         last_name: answer.lastName, 
         role_id: answer.role_id
       }, 
-      (err)=>{
+      (err, res)=>{
         if (err) throw err;
+        console.table(res)
         console.log("you added a new employee to your database!");
-        runSearch();
+        search();
       }
       )
     })
@@ -148,7 +146,7 @@ const removeEmployee=() => {
         message: "Which employee do you want to remove?"
     }).then(()=>{
 
-      runSearch();
+      search();
     })
 }
 function updateRole() {
@@ -168,27 +166,13 @@ function updateRole() {
         message: "What is the employee's new role?"
     }
   ]).then(()=>{
-    runSearch();
+    search();
   })
-}
-
-const updateManager = () => {
-  //updates employee's manager
-    inquirer
-      .prompt({
-        name: "managerUpdate",
-        type: "list",
-        choices:[],
-        message: "Which employee's manager do you want to update?"
-    }).then(()=>{
-
-      runSearch();
-    })
 }
 
 const allRoles=() => {
   //diplays all the existing roles 
-  runSearch();
+  search();
 }
 
 const addRole= () => {
@@ -202,7 +186,6 @@ const addRole= () => {
     {
         name: "salary",
         type: "text",
-        // choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer','Account Manager', 'Accountant', 'Leagal Team Lead'],
         message: "What is the role salary?"
     },
     {
@@ -212,7 +195,7 @@ const addRole= () => {
     }]
     ).then((data)=>{
       console.log(data);
-      runSearch();
+      search();
     })
 }
 
