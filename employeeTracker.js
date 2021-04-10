@@ -14,7 +14,6 @@ const role = [
 const managers = ["sam", "none"];
 const department = ["Sales", "Engineering", "Finance", "Legal"];
 
-
 const search = () => {
   inquirer
     .prompt({
@@ -66,12 +65,10 @@ search();
 
 // View all employees
 const viewEmployees = () => {
-  connection
-    .query("select * from employee")
-    .then((data) => {
-      console.table(data);
-      search();
-    });
+  connection.query("select * from employee").then((data) => {
+    console.table(data);
+    search();
+  });
 };
 
 const allRoles = () => {
@@ -166,7 +163,7 @@ const addRole = () => {
       {
         name: "title",
         type: "input",
-        message: "What is the title of the role?",
+        message: "What is the role Title?",
       },
       {
         name: "salary",
@@ -212,34 +209,68 @@ function addDepartment() {
     ])
     .then((data) => {
       connection.query("INSERT INTO department SET ?", data).then(() => {
-        console.log("Department has been added");
+        console.log("a new department has been added!");
         search();
       });
     });
 }
 
-
 function updateRole() {
-  //updates employee role on the database
-  inquirer
-    .prompt([
-      {
-        name: "employee",
-        type: "list",
-        choices: [],
-        message: "Select the employee?",
-      },
-      {
-        name: "role",
-        type: "list",
-        choices: role,
-        message: "What is the employee's new role?",
-      },
-    ])
+  connection
+    .query(
+      "select employee.id employeeID, role.id roleID, employee.first_name, employee.last_name, role.title from employee  LEFT JOIN role on role.id = employee.role_id"
+    )
     .then((data) => {
-      console.log(data);
-      search();
+      let updateEmployee = data.map(
+        (employee) => employee.first_name + " " + employee.last_name
+      );
+      let updateEmployeeRole = data.map((role) => role.title);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            message: "Select an employee to update their role",
+            choices: updateEmployee,
+            name: "employee",
+          },
+          {
+            type: "list",
+            message: "Select the employee's new role",
+            choices: updateEmployeeRole,
+            name: "role",
+          },
+        ])
+        .then(function (response) {
+          console.table(response);
+          const employeeObj = data.find(
+            (employee) =>
+              employee.first_name + " " + employee.last_name ===
+              response.employee
+          );
+          const employeeRoleObject = data.find(
+            (role) => role.title === response.role
+          );
+
+          const query = "UPDATE employee SET ? WHERE ?";
+
+          connection.query(
+            query,
+            [
+              {
+                role_id: employeeRoleObject.roleID,
+              },
+              {
+                id: employeeObj.employeeID,
+              },
+            ],
+
+            (err, res) => {
+              if (err) throw err;
+            }
+          );
+
+          console.log(response.employee + "'s role has been updated.");
+          search();
+        });
     });
 }
-
-
